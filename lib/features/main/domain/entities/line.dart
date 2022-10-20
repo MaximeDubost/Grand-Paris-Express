@@ -12,6 +12,7 @@ class Line {
   final String name;
   final String type;
   final String icon;
+  final List<String> terminusList;
   final List<Section> sectionList;
 
   Line(
@@ -19,15 +20,16 @@ class Line {
     this.name,
     this.type,
     this.icon,
+    this.terminusList,
     this.sectionList,
   );
   
-
   Line copyWith({
     String? id,
     String? name,
     String? type,
     String? icon,
+    List<String>? terminusList,
     List<Section>? sectionList,
   }) {
     return Line(
@@ -35,6 +37,7 @@ class Line {
       name ?? this.name,
       type ?? this.type,
       icon ?? this.icon,
+      terminusList ?? this.terminusList,
       sectionList ?? this.sectionList,
     );
   }
@@ -45,6 +48,7 @@ class Line {
       'name': name,
       'type': type,
       'icon': icon,
+      'terminusList': terminusList,
       'sectionList': sectionList.map((x) => x.toMap()).toList(),
     };
   }
@@ -55,27 +59,18 @@ class Line {
       map['name'] as String,
       map['type'] as String,
       map['icon'] as String,
+      List<String>.from((map['terminusList'] as List<String>)),
       List<Section>.from((map['sectionList'] as List<int>).map<Section>((x) => Section.fromMap(x as Map<String,dynamic>),),),
     );
-  }
-
-  static fromMapList(List<Map<String, dynamic>> mapList) {
-    List<Line> lineList = [];
-    mapList.forEach((element) {
-      lineList.add(Line.fromMap(element));
-    });
-    return lineList;
   }
 
   String toJson() => json.encode(toMap());
 
   factory Line.fromJson(String source) => Line.fromMap(json.decode(source) as Map<String, dynamic>);
 
-  static fromJsonList(String source) => Line.fromMapList(json.decode(source) as List<Map<String, dynamic>>);
-
   @override
   String toString() {
-    return 'Line(id: $id, name: $name, type: $type, icon: $icon, sectionList: $sectionList)';
+    return 'Line(id: $id, name: $name, type: $type, icon: $icon, terminusList: $terminusList, sectionList: $sectionList)';
   }
 
   @override
@@ -87,6 +82,7 @@ class Line {
       other.name == name &&
       other.type == type &&
       other.icon == icon &&
+      listEquals(other.terminusList, terminusList) &&
       listEquals(other.sectionList, sectionList);
   }
 
@@ -96,6 +92,7 @@ class Line {
       name.hashCode ^
       type.hashCode ^
       icon.hashCode ^
+      terminusList.hashCode ^
       sectionList.hashCode;
   }
 }
