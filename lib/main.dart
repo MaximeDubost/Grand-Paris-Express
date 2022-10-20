@@ -122,43 +122,51 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         backgroundColor: Colors.white,
       ),
-      body: buildLineList(_data, displayWidth),
-      bottomNavigationBar: buildBottomAppBar(displayWidth),
+      body: ListView(
+        physics: const BouncingScrollPhysics(),
+        children: [
+          buildLineList(_data, displayWidth),
+          Container(
+            // TODO : Add secondary lines
+            height: 170,
+            color: Colors.transparent,
+          )
+        ],
+      ),
+      floatingActionButton: buildBottomAppBar(displayWidth),
     );
   }
 
   ///
   /// Build the list of main metro lines
   ///
-  Widget buildLineList(List<Line> lineList, double displayWidth) =>
+  ListView buildLineList(List<Line> lineList, double displayWidth) =>
       ListView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
         itemCount: lineList.length,
         itemBuilder: (context, index) {
           final line = lineList[index];
 
-          return Column(
-            children: [
-              TextButton(
-                onPressed: () {},
-                child: Container(
-                  margin: const EdgeInsets.fromLTRB(24, 0, 0, 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(0, 0, 4, 0),
-                        child: Image.asset("assets/images/lines/metro/m.png"),
-                      ),
-                      Image.asset(line.icon),
-                      line.terminusList.length <= 2
-                          ? buildLineTitle20(line.terminusList)
-                          : buildLineTitle16(line.terminusList)
-                    ],
+          return TextButton(
+            onPressed: () {}, // TODO : Go to detail page
+            child: Container(
+              margin: const EdgeInsets.fromLTRB(24, 0, 0, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 4, 0),
+                    child: Image.asset("assets/images/lines/metro/m.png"),
                   ),
-                ),
-              )
-            ],
+                  Image.asset(line.icon),
+                  line.terminusList.length <= 2
+                      ? buildLineTitle20(line.terminusList)
+                      : buildLineTitle16(line.terminusList)
+                ],
+              ),
+            ),
           );
         },
       );
@@ -166,7 +174,7 @@ class _MyHomePageState extends State<MyHomePage> {
   ///
   /// Build each title of the list of main metro lines (fontSize 20)
   ///
-  Widget buildLineTitle20(List<String> terminusList) {
+  Container buildLineTitle20(List<String> terminusList) {
     List<Widget> titleList = [];
     for (String element in terminusList) {
       titleList.add(
@@ -194,7 +202,7 @@ class _MyHomePageState extends State<MyHomePage> {
   ///
   /// Build each title of the list of main metro lines (fontSize 20)
   ///
-  Widget buildLineTitle16(List<String> terminusList) {
+  Container buildLineTitle16(List<String> terminusList) {
     List<Widget> titleList = [];
     for (String element in terminusList) {
       titleList.add(
@@ -222,9 +230,10 @@ class _MyHomePageState extends State<MyHomePage> {
   ///
   /// Build bottom app bar with period and slider
   ///
-  Widget buildBottomAppBar(double displayWidth) {
+  Container buildBottomAppBar(double displayWidth) {
     return Container(
-      margin: EdgeInsets.all(displayWidth * .05),
+      // margin: EdgeInsets.all(displayWidth * .05),
+      margin: const EdgeInsets.fromLTRB(32, 0, 0, 0),
       height: 120,
       decoration: BoxDecoration(
         color: Colors.white,
