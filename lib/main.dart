@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:grand_paris_express/features/main/data/data_sources/data.dart';
 import 'package:grand_paris_express/features/main/domain/entities/line.dart';
@@ -61,13 +59,45 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   double _period = 2031;
+  List<Line> _data = Data.beyond2030;
 
   ///
-  /// Change period of time (between 2022 and 2031)
+  /// Change period of time (between 2022 and 2030+)
   ///
   void _changePeriod(double period) {
     setState(() {
       _period = period;
+      switch (_period.toStringAsFixed(0)) {
+        case "2022":
+          _data = Data.in2022;
+          break;
+        case "2023":
+          _data = Data.in2023;
+          break;
+        case "2024":
+          _data = Data.in2024;
+          break;
+        case "2025":
+          _data = Data.in2025;
+          break;
+        case "2026":
+          _data = Data.in2026;
+          break;
+        case "2027":
+          _data = Data.in2027;
+          break;
+        case "2028":
+          _data = Data.in2028;
+          break;
+        case "2029":
+          _data = Data.in2029;
+          break;
+        case "2030":
+          _data = Data.in2030;
+          break;
+        default:
+          _data = Data.beyond2030;
+      }
     });
   }
 
@@ -92,7 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         backgroundColor: Colors.white,
       ),
-      body: buildLineList(data, displayWidth),
+      body: buildLineList(_data, displayWidth),
       bottomNavigationBar: buildBottomAppBar(displayWidth),
     );
   }
@@ -121,7 +151,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Image.asset("assets/images/lines/metro/m.png"),
                       ),
                       Image.asset(line.icon),
-                      buildLineTitle(line.terminusList)
+                      line.terminusList.length <= 2
+                          ? buildLineTitle20(line.terminusList)
+                          : buildLineTitle16(line.terminusList)
                     ],
                   ),
                 ),
@@ -132,9 +164,9 @@ class _MyHomePageState extends State<MyHomePage> {
       );
 
   ///
-  /// Build each tile of the list of main metro lines
+  /// Build each title of the list of main metro lines (fontSize 20)
   ///
-  Widget buildLineTitle(List<String> terminusList) {
+  Widget buildLineTitle20(List<String> terminusList) {
     List<Widget> titleList = [];
     for (String element in terminusList) {
       titleList.add(
@@ -142,7 +174,35 @@ class _MyHomePageState extends State<MyHomePage> {
           element,
           style: const TextStyle(
             fontFamily: "Parisine",
-            fontSize: 20.0,
+            fontSize: 20,
+            color: Color.fromRGBO(0, 0, 84, 1),
+          ),
+        ),
+      );
+    }
+    return Container(
+      height: 72,
+      margin: const EdgeInsets.fromLTRB(16, 0, 0, 0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: titleList,
+      ),
+    );
+  }
+
+  ///
+  /// Build each title of the list of main metro lines (fontSize 20)
+  ///
+  Widget buildLineTitle16(List<String> terminusList) {
+    List<Widget> titleList = [];
+    for (String element in terminusList) {
+      titleList.add(
+        Text(
+          element,
+          style: const TextStyle(
+            fontFamily: "Parisine",
+            fontSize: 16,
             color: Color.fromRGBO(0, 0, 84, 1),
           ),
         ),
@@ -188,7 +248,9 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             color: colorPrimary,
             child: Text(
-              _period.toStringAsFixed(0),
+              _period.toStringAsFixed(0) == "2031"
+                  ? "> 2030"
+                  : _period.toStringAsFixed(0),
               style: const TextStyle(
                 fontFamily: "Parisine",
                 fontSize: 36,
